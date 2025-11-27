@@ -1,6 +1,6 @@
 import pg from 'pg';
 import config from 'config';
-import { WeatherData, WeatherDataSchema, WeatherFilter } from './dto.js';
+import { WeatherData, WeatherDataSchema, WeatherFilter, WeatherFilterSchema } from './dto.js';
 import logger from '../logger.js';
 
 const poolConfig = config.get<pg.PoolConfig>('database');
@@ -64,7 +64,7 @@ export class WeatherDataRepository {
     return result.rows as WeatherData[];
   }
 
-  async getAvgWeatherData(location: string, dateFilter: WeatherFilter): Promise<number | null> {
+  async getAvgWeatherData(location: string, dateFilter: WeatherFilter): Promise<string | null> {
     let index = 2;
     let query = `
         SELECT avg(weather.temperature) FROM weather
@@ -86,6 +86,30 @@ export class WeatherDataRepository {
     const result: pg.QueryResult = await this.pool.query(query, options);
     return result.rows[0].avg ?? null;
   }
+
+  async getMaxWeatherTemp(location: string, dateFilter: WeatherFilter): Promise<string| null> {
+    let index = 2;
+    let query = `
+      SELECT max(weather.temperature) FROM weather
+      WHERE location = $1
+    `
+    const options: any[] = [location]
+
+    if(dateFilter.from) {
+      query += ` AND weather.date >= $${index}`
+      index++
+      options.push(dateFilter.from)
+    }
+
+    if(dateFilter.to) {
+      query += ` AND weather.date <= $${index}`
+      options.push(dateFilter.to)
+    }
+
+    const result: pg.QueryResult = await this.pool.query(query, options);
+    return result.rows[0].max ?? null;
+  }
 }
+
 
 export default new WeatherDataRepository();

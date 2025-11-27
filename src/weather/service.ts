@@ -36,20 +36,30 @@ export class WeatherService {
   }
 
   async getMean(location: string, options: WeatherFilter) {
+    // Code d'origine
+    // const data = await this.getData(location, options);
+    // if (data === null) {
+    //   return null;
+    // }
+    // const mean =
+    //   data
+    //     .map((datum) => datum.temperature)
+    //     .reduce((acc, current) => acc + current, 0.0) / data.length;
+
     return await this.weatherRepository.getAvgWeatherData(location, options)
   }
 
   async getMax(location: string, options: WeatherFilter) {
-    const data = await this.getData(location, options);
+    // Code d'origin
+    // const data = await this.getData(location, options);
+    // if (data === null) {
+    //   return null;
+    // }
+    // const mean = data
+    //   .map((datum) => datum.temperature)
+    //   .reduce((acc, current) => Math.max(acc, current), data[0].temperature);
 
-    if (data === null) {
-      return null;
-    }
-    const mean = data
-      .map((datum) => datum.temperature)
-      .reduce((acc, current) => Math.max(acc, current), data[0].temperature);
-
-    return mean;
+    return this.weatherRepository.getMaxWeatherTemp(location, options);
   }
 
   async getMin(location: string, options: WeatherFilter) {
