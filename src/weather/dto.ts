@@ -13,6 +13,7 @@ export const WeatherFilterSchema = z.object({
   from: z.coerce.date().optional(),
   to: z.coerce.date().optional(),
   page: z.coerce.number(),
+  limit: z.coerce.number()
 });
 
 export type WeatherFilter = z.infer<typeof WeatherFilterSchema>;

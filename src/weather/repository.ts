@@ -42,16 +42,17 @@ export class WeatherDataRepository {
 
   async getWeatherDataByLocation(
     location: string,
-    offset: number
+    offset: number,
+    limit: number
   ): Promise<WeatherData[] | null> {
     const query = `
-            SELECT * FROM weather 
+            SELECT weather.temperature, weather.humidity, weather.date FROM weather 
             WHERE location = $1 
             ORDER BY weather.date DESC
-            LIMIT 20 OFFSET $2
+            LIMIT $2 OFFSET $3
         `;
 
-    const result: pg.QueryResult = await this.pool.query(query, [location, offset]);
+    const result: pg.QueryResult = await this.pool.query(query, [location, limit,offset]);
 
     if (result.rows.length === 0) {
       return null;
@@ -64,9 +65,14 @@ export class WeatherDataRepository {
     return result.rows as WeatherData[];
   }
 
-  async getAllWeatherData(): Promise<WeatherData[]> {
-    const query = 'SELECT * FROM weather';
-    const result: pg.QueryResult = await this.pool.query(query);
+  async getAllWeatherData(offset: number, limit: number): Promise<WeatherData[]> {
+    const query = `
+        SELECT weather.location, weather.temperature 
+        FROM weather
+        ORDER BY weather.date
+        LIMIT $1 OFFSET $2
+      `;
+    const result: pg.QueryResult = await this.pool.query(query, [limit, offset]);
     return result.rows as WeatherData[];
   }
 
