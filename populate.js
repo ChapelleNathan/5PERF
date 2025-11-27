@@ -1,6 +1,5 @@
 import axios from "axios";
 
-
 const API_URL = "http://localhost:3000/weather/data";
 const cities = ["Lyon", "Paris"];
 
@@ -11,8 +10,7 @@ function randomDate2025() {
 }
 
 function randomTemperature(city) {
-    // Températures plausibles
-    // Lyon légèrement plus chaud que Paris
+
     const base = city === "Lyon" ? 5 : 3;
     const seasonalVariation = Math.random() * 25; // -5 à +20
     return Math.round(base + seasonalVariation);
@@ -38,11 +36,6 @@ async function sendData() {
     console.log("Envoi de 100 objets météo...");
 
     try {
-        // const res = await fetch(API_URL, {
-        //     method: "POST",
-        //     headers: { "Content-Type": "application/json" },
-        //     body: JSON.stringify(payload),
-        // });
         payload.forEach(async (data, index) => {
             await axios.post(API_URL, data)
             console.log(`Data n°${index} chargée`);
