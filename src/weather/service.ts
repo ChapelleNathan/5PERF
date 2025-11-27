@@ -63,16 +63,16 @@ export class WeatherService {
   }
 
   async getMin(location: string, options: WeatherFilter) {
-    const data = await this.getData(location, options);
+    // const data = await this.getData(location, options);
 
-    if (data === null) {
-      return null;
-    }
-    const mean = data
-      .map((datum) => datum.temperature)
-      .reduce((acc, current) => Math.min(acc, current), data[0].temperature);
+    // if (data === null) {
+    //   return null;
+    // }
+    // const mean = data
+    //   .map((datum) => datum.temperature)
+    //   .reduce((acc, current) => Math.min(acc, current), data[0].temperature);
 
-    return mean;
+    return await this.weatherRepository.getMinWeatherTemp(location, options);
   }
 }
 

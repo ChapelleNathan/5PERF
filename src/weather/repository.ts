@@ -109,6 +109,29 @@ export class WeatherDataRepository {
     const result: pg.QueryResult = await this.pool.query(query, options);
     return result.rows[0].max ?? null;
   }
+
+  async getMinWeatherTemp(location: string, dateFilter: WeatherFilter): Promise<string | null> {
+    let index = 2;
+    let query = `
+      SELECT min(weather.temperature) FROM weather
+      WHERE location = $1
+    `
+    const options: any[] = [location]
+
+    if(dateFilter.from) {
+      query += ` AND weather.date >= $${index}`
+      index++
+      options.push(dateFilter.from);
+    }
+
+    if(dateFilter.to) {
+      query += ` AND weather.date <= $${index}`
+      options.push(dateFilter.to)
+    }
+
+    const result: pg.QueryResult = await this.pool.query(query, options);
+    return result.rows[0].min ?? null;
+  }
 }
 
 
