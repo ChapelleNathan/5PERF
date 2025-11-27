@@ -15,12 +15,12 @@ export class WeatherDataRepository {
   async createTable(): Promise<void> {
     const query = `
             CREATE TABLE IF NOT EXISTS weather (
-                location VARCHAR(256),
+                location VARCHAR(100),
                 date DATE,
-                temperature DECIMAL,
-                humidity DECIMAL,
+                temperature REAL,
+                humidity REAL,
                 PRIMARY KEY(location, date)
-            )
+            ) PARTITION BY RANGE (date)
         `;
     await this.pool.query(query);
   }
