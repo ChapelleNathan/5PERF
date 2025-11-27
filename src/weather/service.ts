@@ -13,27 +13,30 @@ export class WeatherService {
     return this.weatherRepository.insertWeatherData(data);
   }
 
-  async getData(location: string, options: WeatherFilter) {
-    const { from, to } = options;
-    const data = await this.weatherRepository.getWeatherDataByLocation(
-      location
-    );
-    if (data === null) {
-      return null;
-    }
-    return data.filter((datum) => {
-      if (
-        from &&
-        (dayjs(from).isAfter(datum.date) || dayjs(from).isSame(datum.date))
-      ) {
-        return false;
-      }
-      if (to && dayjs(to).isBefore(datum.date)) {
-        return false;
-      }
-      return true;
-    });
-  }
+
+  // Plus besoin de getData car le filtre sur la date se fait directement dans la requête SQL et sera bcp plus opti
+
+  // async getData(location: string, options: WeatherFilter) {
+  //   const { from, to } = options;
+  //   const data = await this.weatherRepository.getWeatherDataByLocation(
+  //     location
+  //   );
+  //   if (data === null) {
+  //     return null;
+  //   }
+  //   return data.filter((datum) => {
+  //     if (
+  //       from &&
+  //       (dayjs(from).isAfter(datum.date) || dayjs(from).isSame(datum.date))
+  //     ) {
+  //       return false;
+  //     }
+  //     if (to && dayjs(to).isBefore(datum.date)) {
+  //       return false;
+  //     }
+  //     return true;
+  //   });
+  // }
 
   async getMean(location: string, options: WeatherFilter) {
     // Code d'origine
