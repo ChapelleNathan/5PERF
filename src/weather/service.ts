@@ -1,7 +1,5 @@
 import repositoryInstance, { WeatherDataRepository } from './repository.js';
 import { WeatherData, WeatherFilter } from './dto.js';
-import dayjs from 'dayjs';
-import logger from '../logger.js';
 
 export class WeatherService {
   private weatherRepository: WeatherDataRepository;
@@ -14,29 +12,30 @@ export class WeatherService {
   }
 
 
-  // Plus besoin de getData car le filtre sur la date se fait directement dans la requête SQL et sera bcp plus opti
 
-  // async getData(location: string, options: WeatherFilter) {
-  //   const { from, to } = options;
-  //   const data = await this.weatherRepository.getWeatherDataByLocation(
-  //     location
-  //   );
-  //   if (data === null) {
-  //     return null;
-  //   }
-  //   return data.filter((datum) => {
-  //     if (
-  //       from &&
-  //       (dayjs(from).isAfter(datum.date) || dayjs(from).isSame(datum.date))
-  //     ) {
-  //       return false;
-  //     }
-  //     if (to && dayjs(to).isBefore(datum.date)) {
-  //       return false;
-  //     }
-  //     return true;
-  //   });
-  // }
+  async getData(location: string, options: WeatherFilter) {
+    const { from, to } = options;
+    const data = await this.weatherRepository.getWeatherDataByLocation(location);
+
+    // Plus besoins de filtre temporel dans cette méthode, de la pur lecture
+
+    // if (data === null) {
+    //   return null;
+    // }
+    // return data.filter((datum) => {
+    //   if (
+    //     from &&
+    //     (dayjs(from).isAfter(datum.date) || dayjs(from).isSame(datum.date))
+    //   ) {
+    //     return false;
+    //   }
+    //   if (to && dayjs(to).isBefore(datum.date)) {
+    //     return false;
+    //   }
+    //   return true;
+    // });
+    return data
+  }
 
   async getMean(location: string, options: WeatherFilter) {
     // Code d'origine
