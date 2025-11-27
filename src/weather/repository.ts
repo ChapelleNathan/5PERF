@@ -1,6 +1,7 @@
 import pg from 'pg';
 import config from 'config';
-import { WeatherData, WeatherDataSchema } from './dto.js';
+import { WeatherData, WeatherDataSchema, WeatherFilter } from './dto.js';
+import logger from '../logger.js';
 
 const poolConfig = config.get<pg.PoolConfig>('database');
 
@@ -61,6 +62,29 @@ export class WeatherDataRepository {
     const query = 'SELECT * FROM weather';
     const result: pg.QueryResult = await this.pool.query(query);
     return result.rows as WeatherData[];
+  }
+
+  async getAvgWeatherData(location: string, dateFilter: WeatherFilter): Promise<number | null> {
+    let index = 2;
+    let query = `
+        SELECT avg(weather.temperature) FROM weather
+        WHERE location = $1
+      `
+    const options: any[] = [
+      location
+    ]
+    if(dateFilter.from) {
+      query += ` AND weather.date >= $${index}`
+      index++
+      options.push(dateFilter.from)
+    }
+    if(dateFilter.to) {
+      query += ` AND weather.date <= $${index}`
+      options.push(dateFilter.to)
+    }
+    
+    const result: pg.QueryResult = await this.pool.query(query, options);
+    return result.rows[0].avg ?? null;
   }
 }
 

@@ -1,6 +1,7 @@
 import repositoryInstance, { WeatherDataRepository } from './repository.js';
 import { WeatherData, WeatherFilter } from './dto.js';
 import dayjs from 'dayjs';
+import logger from '../logger.js';
 
 export class WeatherService {
   private weatherRepository: WeatherDataRepository;
@@ -35,16 +36,7 @@ export class WeatherService {
   }
 
   async getMean(location: string, options: WeatherFilter) {
-    const data = await this.getData(location, options);
-    if (data === null) {
-      return null;
-    }
-    const mean =
-      data
-        .map((datum) => datum.temperature)
-        .reduce((acc, current) => acc + current, 0.0) / data.length;
-
-    return mean;
+    return await this.weatherRepository.getAvgWeatherData(location, options)
   }
 
   async getMax(location: string, options: WeatherFilter) {
