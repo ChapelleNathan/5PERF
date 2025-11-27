@@ -14,8 +14,8 @@ export class WeatherService {
 
 
   async getData(location: string, options: WeatherFilter) {
-    const { from, to } = options;
-    const data = await this.weatherRepository.getWeatherDataByLocation(location);
+    const { page } = options;
+    const data = await this.weatherRepository.getWeatherDataByLocation(location, page);
 
     // Plus besoins de filtre temporel dans cette méthode, de la pur lecture
 

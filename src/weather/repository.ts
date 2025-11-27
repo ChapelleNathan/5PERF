@@ -41,21 +41,27 @@ export class WeatherDataRepository {
   }
 
   async getWeatherDataByLocation(
-    location: string
+    location: string,
+    offset: number
   ): Promise<WeatherData[] | null> {
     const query = `
-            SELECT * FROM weather WHERE location = $1
+            SELECT * FROM weather 
+            WHERE location = $1 
+            ORDER BY weather.date DESC
+            LIMIT 20 OFFSET $2
         `;
 
-    const result: pg.QueryResult = await this.pool.query(query, [location]);
+    const result: pg.QueryResult = await this.pool.query(query, [location, offset]);
 
     if (result.rows.length === 0) {
       return null;
     }
 
-    return result.rows.map((row) =>
-      WeatherDataSchema.parse(row)
-    ) as WeatherData[];
+    // return result.rows.map((row) =>
+    //   WeatherDataSchema.parse(row)
+    // ) as WeatherData[];
+
+    return result.rows as WeatherData[];
   }
 
   async getAllWeatherData(): Promise<WeatherData[]> {
