@@ -1,8 +1,3 @@
-#!/usr/bin/env node
-
-// Script pour envoyer ~100 objets météo en POST vers http://localhost:3000/weather/data
-// Utilisation : chmod +x weather_data_sender.js && ./weather_data_sender.js
-
 import axios from "axios";
 
 
